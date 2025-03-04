@@ -19,5 +19,9 @@ from django.urls import path
 from apps.users import views
 
 urlpatterns = [
-    path('register/', views.CreateUserAPIView.as_view(), name='Register Account')    
+    
+    ## Authentication
+    path('register/', views.UserAPIView.as_view(), name='Register Account'),
+    path('update/', views.UserAPIView.as_view(), name='Update User'),
+    path('login/', views.LoginUserAPIView.as_view(), name='login')
 ]
