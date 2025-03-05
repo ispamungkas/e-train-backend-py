@@ -1,16 +1,16 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.contrib.auth.hashers import make_password, check_password 
+from django.contrib.auth.hashers import check_password 
 from django.contrib.auth import get_user_model, authenticate
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.parsers import FormParser
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import UserSerializer
 from .models import User
@@ -85,42 +85,57 @@ class LoginUserAPIView(APIView):
 
 # @method_decorator(csrf_exempt, name='dispatch')
 class UserAPIView(APIView):
+    parser_classes = [FormParser, JSONParser]
+    
+    def post(self, request):
+        if not request.data.get('nip') or not request.data.get('name'):
+            return Response({'message': 'please input require data'}, status=status.HTTP_400_BAD_REQUEST,)
+
+        u_serialize = UserSerializer(data=request.data)
+        if u_serialize.is_valid():
+            u_serialize.save()            
+            return Response({'message': 'create account successfully', 'data': u_serialize.data})
+        
+        erorrs = list(u_serialize.errors.values())[0][0]
+        return Response({'message': erorrs}, status=status.HTTP_400_BAD_REQUEST)
+        
+class UpdateUserAPIVIew(APIView):
+    parser_classes = [FormParser,JSONParser, MultiPartParser]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, id):
+        try:
+            u_obj = User.objects.get(id=id)
+        except User.DoesNotExist:
+            return Response({'message': 'user not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        u_serialize = UserSerializer(u_obj, data=request.data, partial=True, context={'request': request})
+        if u_serialize.is_valid():
+            res = u_serialize.save()
+            return Response({
+                'message': 'user updated',
+                'data': UserSerializer(res, context={'request': request}).data
+            })
+        
+        erorrs = list(u_serialize.errors.values())[0][0]
+        return Response({'message': erorrs}, status=status.HTTP_400_BAD_REQUEST)
+
+class OTPAPIView(APIView):
+    parser_classes = [FormParser, JSONParser]
+    
+    ## Create Code OTP
+    def get(self, request):
+        email = request.body.get('email')
+        pass
+    
+    ## Verify Code OTP
+    def post(self, request):
+        c_otp = request.body.get('otp')
+        pass
+    
+class ForgotPasswordAPIView(APIView):
     parser_classes = [FormParser]
     
     def post(self, request):
-        nip= request.data.get('nip')
-        name= request.data.get('name')
-        ishead= request.data.get('ishead')
-        
-        if not nip or not name:
-            return Response({'message': 'please input require data'}, status=status.HTTP_400_BAD_REQUEST,)
-        
-        if not is_valid_nip(nip):
-            return Response({
-                'message': 'nip already use',
-            }, status=status.HTTP_406_NOT_ACCEPTABLE)
-        
-        p_hash = make_password(nip)
-        u_obj = User.objects.create(
-                name=name,
-                nip=nip,
-                password=p_hash,
-            )
-        
-        ## Mendaftarkan akun ke dalam default user Django untuk authentication
-        d_user.objects.create_user(username=nip, password=p_hash)
-        
-        if ishead:
-            u_obj.role=User.RoleChoice.HEADSCHOOL
-        else:
-            u_obj.role = User.RoleChoice.TEACHER
-
-        u_obj.save()
-        u_serialize = UserSerializer(
-            u_obj
-        )
-        
-        return Response({'message': 'create account successfully', 'data': u_serialize.data})
-    
-    def put(self, request):
         pass

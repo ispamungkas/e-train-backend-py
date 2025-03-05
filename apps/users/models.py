@@ -1,6 +1,10 @@
 import time
+
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser
+
+def file_location(instance, filename, **kwargs):
+    file_path = f'images/profile/{instance.nip}--{time.time()}-{filename}'
+    return file_path
 
 # Create your models here.
 class User(models.Model):
@@ -11,7 +15,7 @@ class User(models.Model):
         SUPERUSER = 'Super User'
     
     name = models.CharField(max_length=30)
-    nip = models.CharField(max_length=20)
+    nip = models.CharField(max_length=20, unique=True)  
     password = models.CharField(max_length=10)
     email = models.EmailField(null= True)
     address = models.TextField(null= True)
@@ -19,8 +23,10 @@ class User(models.Model):
     gender = models.CharField(max_length=1, null=True)
     l_edu = models.CharField(max_length=20, null=True)
     c_school = models.CharField(max_length=20, null=True)
-    role = models.CharField(max_length=20, choices=RoleChoice.choices, default=RoleChoice.TEACHER)
+    role = models.CharField(max_length=20, choices=RoleChoice.choices, null=True)
+    img_profile = models.ImageField(null= True, max_length=None, upload_to=file_location)
     created_at = models.IntegerField(default=time.time)
+    updated_at = models.IntegerField(default=time.time)
     deleted_at = models.IntegerField(default=0)
     
     def __str__(self):
