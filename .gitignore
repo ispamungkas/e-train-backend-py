@@ -2,5 +2,6 @@
 /media
 /Scripts
 /ETR/settings.py
+.env
 pyvenv.cfg
 db.sqlite3
