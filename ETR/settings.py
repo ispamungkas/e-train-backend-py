@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ghb9k=89ak%+*$6-rfbntd(&2s39ygtosr@49veu!rlyg)1fd+
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '285f-180-254-65-240.ngrok-free.app'
+    'dee2-180-254-65-240.ngrok-free.app'
 ]
 
 
@@ -174,3 +174,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email Required
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "ispamungkas0@gmail.com"
+EMAIL_HOST_PASSWORD = "vrjxqqwvnkbtekgk"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -1,8 +1,11 @@
+import random
 
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password 
+from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth import get_user_model, authenticate
+from django.core.mail import send_mail
+from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,8 +15,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, OTPSerializer, VerifyOTPSerializer, UpdatePasswordSerializer
+from .models import User, OTP
 
 d_user = get_user_model()
 
@@ -123,19 +126,89 @@ class UpdateUserAPIVIew(APIView):
 
 class OTPAPIView(APIView):
     parser_classes = [FormParser, JSONParser]
-    
-    ## Create Code OTP
-    def get(self, request):
-        email = request.body.get('email')
-        pass
-    
-    ## Verify Code OTP
+  
+    ## Create OTP
     def post(self, request):
-        c_otp = request.body.get('otp')
-        pass
-    
-class ForgotPasswordAPIView(APIView):
-    parser_classes = [FormParser]
+        otp_serializer = OTPSerializer(data = request.data)
+        if otp_serializer.is_valid():
+            nip = otp_serializer.validated_data['nip']
+            user = User.objects.get(nip=nip)
+                
+            otp_code = str(random.randint(1000, 9999))
+            OTP.objects.create(
+                user=user,
+                otp_code=otp_code
+            )
+            
+            # Send Code OTP
+            subject = "Your OTP was arrived"
+            message = f"""Subject: Secure OTP Code for Your Account
+
+Dear {user.name},
+
+For security purposes, please use the One-Time Password (OTP) below to verify your identity:
+
+🔐 Your OTP Code: {otp_code}  
+🕒 Validity: 5 minutes  
+
+⚠️ Never share this code with anyone. Our support team will never ask for your OTP.
+
+Best,  
+E-Train Security Team
+"""
+            
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [user.email]
+            
+            send_mail(subject, message, from_email, recipient_list)
+            
+            return Response({'message': 'otp code was sended'}, status=status.HTTP_201_CREATED)
+        
+        error = list(otp_serializer.errors.values())[0][0]
+        return Response({'message': error}, status=status.HTTP_400_BAD_REQUEST) 
+            
+class VerifyOTPAPIView(APIView):
+    parser_classes = [FormParser, JSONParser]
     
     def post(self, request):
-        pass
+        verify_serializer = VerifyOTPSerializer(data=request.data)
+        if verify_serializer.is_valid():
+            otp = verify_serializer.validated_data.get('otp_code')
+            
+            otp_obj = OTP.objects.filter(otp_code=otp).last()
+            
+            if otp_obj and otp_obj.is_valid():
+                otp_obj.delete()
+                return Response({'message': 'otp valid'})
+            
+            return Response({'message': 'otp_invalid'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        error = list(verify_serializer.errors.values())[0][0]
+        return Response({'message': error}, status=status.HTTP_400_BAD_REQUEST)  
+                
+class UpdatePasswordAPIView(APIView):
+    parser_classes = [FormParser, JSONParser]
+    
+    def patch(self, request):
+        update_serializer = UpdatePasswordSerializer(data=request.data)
+        if update_serializer.is_valid():
+            nip = update_serializer.validated_data.get('nip')
+            new_password = update_serializer.validated_data.get('new_password')
+            
+            u_obj = User.objects.get(nip=nip)
+            u_base = d_user.objects.get(username=nip)
+            if not u_obj:
+                return Response({'message': 'nip not found'}, status=status.HTTP_404_NOT_FOUND)
+            if not u_base:
+                return Response({'message': 'nip not found on base'}, status=status.HTTP_404_NOT_FOUND)
+
+            p_hash = make_password(new_password)
+            u_obj.password = p_hash
+            u_base.set_password(p_hash)
+            u_obj.save()
+            u_base.save()
+            
+            return Response({'message': 'password updated'})
+        
+        error = list(update_serializer.errors.values())[0][0]
+        return Response({'message': error}, status=status.HTTP_400_BAD_REQUEST)

@@ -27,6 +27,9 @@ urlpatterns = [
     path('register/', views.UserAPIView.as_view(), name='Register Account'),
     path('login/', views.LoginUserAPIView.as_view(), name='Login'),
     path('updateuser/<int:id>', views.UpdateUserAPIVIew.as_view(), name='Update User'),
+    path('requestotp/', views.OTPAPIView.as_view(), name = 'Request OTP'),
+    path('validateotp/', views.VerifyOTPAPIView.as_view(), name = 'Verify OTP'),
+    path('updatepassword/', views.UpdatePasswordAPIView.as_view(), name = 'Update Password')
     
 ]
 

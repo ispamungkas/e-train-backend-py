@@ -1,7 +1,8 @@
 import time
+import random
 
 from rest_framework import serializers
-from .models import User
+from .models import User, OTP
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
@@ -75,4 +76,19 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
+class OTPSerializer(serializers.Serializer):
+    nip = serializers.CharField(required=True)
+    
+    def validate_nip(self, value):
+        if not User.objects.filter(nip=value).exists():
+            raise serializers.ValidationError('nip not exist') 
+        return value
+        
+
+class VerifyOTPSerializer(serializers.Serializer):
+    otp_code = serializers.CharField(max_length=4, required=True)
+    
+class UpdatePasswordSerializer(serializers.Serializer):
+    nip = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=6)
     

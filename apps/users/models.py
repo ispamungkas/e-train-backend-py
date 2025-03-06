@@ -1,6 +1,8 @@
 import time
 
 from django.db import models
+from django.utils.timezone import now
+from datetime import timedelta
 
 def file_location(instance, filename, **kwargs):
     file_path = f'images/profile/{instance.nip}--{time.time()}-{filename}'
@@ -17,7 +19,7 @@ class User(models.Model):
     name = models.CharField(max_length=30)
     nip = models.CharField(max_length=20, unique=True)  
     password = models.CharField(max_length=10)
-    email = models.EmailField(null= True)
+    email = models.EmailField(null= True, unique=True)
     address = models.TextField(null= True)
     p_number = models.CharField(max_length=14, null= True)
     gender = models.CharField(max_length=1, null=True)
@@ -31,3 +33,13 @@ class User(models.Model):
     
     def __str__(self):
         return self.name
+    
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp_code = models.CharField(max_length=4)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def is_valid(self):
+        return self.created_at >= now() - timedelta(minutes=5)
+    
+    
