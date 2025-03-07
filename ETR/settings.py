@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'dee2-180-254-65-240.ngrok-free.app'
+    '7e28-180-254-65-240.ngrok-free.app'
 ]
 
 
@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     ## Import apps
     'apps.enrolls',
     'apps.trainings',
-    'apps.users'
+    'apps.users',
+    'apps.commons'
 ]
 
 MIDDLEWARE = [

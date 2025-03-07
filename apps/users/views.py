@@ -30,7 +30,7 @@ def is_valid_nip(c_nip):
     return True
 
 class LoginUserAPIView(APIView):
-    parser_classes = [FormParser]
+    parser_classes = [FormParser, MultiPartParser]
     
     def post(self, request):
         nip = request.data.get('nip')
@@ -88,7 +88,7 @@ class LoginUserAPIView(APIView):
 
 # @method_decorator(csrf_exempt, name='dispatch')
 class UserAPIView(APIView):
-    parser_classes = [FormParser, JSONParser]
+    parser_classes = [FormParser, JSONParser, MultiPartParser]
     
     def post(self, request):
         if not request.data.get('nip') or not request.data.get('name'):

@@ -19,17 +19,30 @@ from django.conf.urls.static import static
 
 from django.contrib import admin
 from django.urls import path
-from apps.users import views
+from apps.users import views as user_view
+from apps.trainings import views as training_view
 
 urlpatterns = [
     
     ## Authentication
-    path('register/', views.UserAPIView.as_view(), name='Register Account'),
-    path('login/', views.LoginUserAPIView.as_view(), name='Login'),
-    path('updateuser/<int:id>', views.UpdateUserAPIVIew.as_view(), name='Update User'),
-    path('requestotp/', views.OTPAPIView.as_view(), name = 'Request OTP'),
-    path('validateotp/', views.VerifyOTPAPIView.as_view(), name = 'Verify OTP'),
-    path('updatepassword/', views.UpdatePasswordAPIView.as_view(), name = 'Update Password')
+    path('register/', user_view.UserAPIView.as_view(), name='Register Account'),
+    path('login/', user_view.LoginUserAPIView.as_view(), name='Login'),
+    path('updateuser/<int:id>', user_view.UpdateUserAPIVIew.as_view(), name='Update User'),
+    path('requestotp/', user_view.OTPAPIView.as_view(), name = 'Request OTP'),
+    path('validateotp/', user_view.VerifyOTPAPIView.as_view(), name = 'Verify OTP'),
+    path('updatepassword/', user_view.UpdatePasswordAPIView.as_view(), name = 'Update Password'),
+    
+    ## Training
+    path('training/', training_view.TrainingAPIView.as_view(), name = 'Training Management'),
+    path('training/<int:id>', training_view.TrainingAPIView.as_view(), name = 'Training Management'),
+    
+    ## Section
+    path('section/', training_view.SectionAPIView.as_view(), name = 'Section Management'),
+    path('section/<int:id>', training_view.SectionAPIView.as_view(), name = 'Section Management'),
+    
+    ## Topic
+    path('topic/', training_view.TopicAPIView.as_view(), name = 'Topic Management'),
+    path('topic/<int:id>', training_view.TopicAPIView.as_view(), name = 'Topic Management'),
     
 ]
 
