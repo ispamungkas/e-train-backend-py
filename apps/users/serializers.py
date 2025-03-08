@@ -1,8 +1,7 @@
 import time
-import random
 
 from rest_framework import serializers
-from .models import User, OTP
+from .models import User
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
@@ -10,11 +9,13 @@ from django.contrib.auth import get_user_model
 d_user = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    ishead = serializers.BooleanField(required=False, write_only=True, default=False)
     
+    ishead = serializers.BooleanField(required=False, write_only=True, default=False)
+
     class Meta:
         model = User
         fields = (
+            'id',
             'name',
             'nip',
             'email',
@@ -28,13 +29,14 @@ class UserSerializer(serializers.ModelSerializer):
             'img_profile',
             'updated_at',
             'created_at',
-            'deleted_at'
+            'deleted_at',
+            'enrolls'
         )
         extra_kwargs = {
             'ishead': {'required': False},
             'img_profile_access': {'required': False}
         }
-        
+
     def validate_nip(self, value):
         if User.objects.filter(nip=value).exists():
             raise serializers.ValidationError('nip already use')

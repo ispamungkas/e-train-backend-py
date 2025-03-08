@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.urls import path
 from apps.users import views as user_view
 from apps.trainings import views as training_view
+from apps.test_training import views as test_training_view
 
 urlpatterns = [
     
@@ -43,6 +44,14 @@ urlpatterns = [
     ## Topic
     path('topic/', training_view.TopicAPIView.as_view(), name = 'Topic Management'),
     path('topic/<int:id>', training_view.TopicAPIView.as_view(), name = 'Topic Management'),
+    
+    ## Post Test
+    path('posttest/', test_training_view.PostTestAPIView.as_view(), name = 'Post Test Management'),
+    path('posttest/<int:id>', test_training_view.PostTestAPIView.as_view(), name = 'Post Test Management'),
+    
+    ## Post Test
+    path('answer/', test_training_view.AnswerAPIView.as_view(), name = 'Answer Management'),
+    path('answer/<int:id>', test_training_view.AnswerAPIView.as_view(), name = 'Answer Management')
     
 ]
 

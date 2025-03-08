@@ -1,8 +1,6 @@
-from django.db import models
+from django.db import models, Error
 
 import time
-
-from django.db import Error, models
 
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):

@@ -49,8 +49,7 @@ class Topic(BaseModel, SoftDelete):
     
     section_id = models.ForeignKey(Section, related_name='topics', on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
-    status = models.CharField(max_length=15, choices=Status.choices, default=Status.UNCOMPLETED)
-    content = models.TextField()
+    content = models.TextField(null=True)
     
     def __str__(self):
         return self.name

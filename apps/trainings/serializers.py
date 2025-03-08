@@ -3,22 +3,14 @@ import time
 from rest_framework import serializers
 
 from .models import Training, Section, Topic, Status
+from apps.test_training.serializers import PostTestSerializer
 
 class TopicSerializer(serializers.ModelSerializer):
-    # for question
-    # status=serializers.SerializerMethodField()
-    
-    # def get_status(self, obj):
-    #     if obj.topics.all():
-    #         return Status.COMPLETED
-    #     return Status.UNCOMPLETED
-    
     class Meta:
         model = Topic
         fields = (
             'section_id',
             'name',
-            'status',
             'content',
             'created_at',
             'updated_at',
@@ -42,6 +34,7 @@ class TopicSerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
+    
 class SectionSerializer(serializers.ModelSerializer):
     topics=TopicSerializer(many=True, read_only=True)
     status=serializers.SerializerMethodField()
@@ -86,6 +79,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class TrainingSerializer(serializers.ModelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
+    post_tests = PostTestSerializer(many=True, read_only=True)
     total_jp = serializers.SerializerMethodField()
     is_open = serializers.SerializerMethodField()
     
@@ -115,9 +109,9 @@ class TrainingSerializer(serializers.ModelSerializer):
             'created_at',
             'deleted_at',
             'updated_at',
-            'sections'
+            'sections',
+            'post_tests',
         )
-    
     
     def create(self, validated_data):
         t_obj = Training.objects.create(

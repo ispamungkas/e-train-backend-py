@@ -30,12 +30,11 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '7e28-180-254-65-240.ngrok-free.app'
+    '*'
 ]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,10 +46,19 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     
     ## Import apps
-    'apps.enrolls',
+    # 'apps.attachment',
+    # 'apps.commons',
+    # 'apps.enrolls',
+    # 'apps.test',
+    # 'apps.trainings',
+    # 'apps.users',
+    
+    'apps.commons',
     'apps.trainings',
     'apps.users',
-    'apps.commons'
+    'apps.test_training',
+    'apps.enrolls',
+    'apps.attachment',
 ]
 
 MIDDLEWARE = [
