@@ -22,6 +22,7 @@ from django.urls import path
 from apps.users import views as user_view
 from apps.trainings import views as training_view
 from apps.test_training import views as test_training_view
+from apps.enrolls import views as enrolls_view
 
 urlpatterns = [
     
@@ -51,7 +52,11 @@ urlpatterns = [
     
     ## Post Test
     path('answer/', test_training_view.AnswerAPIView.as_view(), name = 'Answer Management'),
-    path('answer/<int:id>', test_training_view.AnswerAPIView.as_view(), name = 'Answer Management')
+    path('answer/<int:id>', test_training_view.AnswerAPIView.as_view(), name = 'Answer Management'),
+    
+    ## Enroll
+    path('enroll/', enrolls_view.EnrollAPIView.as_view(), name = 'Enroll Management'),
+    path('enroll/<int:id>', enrolls_view.EnrollAPIView.as_view(), name = 'Enroll Management')
     
 ]
 

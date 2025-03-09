@@ -12,6 +12,7 @@ class TopicSerializer(serializers.ModelSerializer):
             'section_id',
             'name',
             'content',
+            'img',
             'created_at',
             'updated_at',
             'deleted_at',
@@ -21,7 +22,8 @@ class TopicSerializer(serializers.ModelSerializer):
         s_obj = Topic.objects.create(
             name = validated_data.get('name'),
             section_id = validated_data.get('section_id'),
-            content = validated_data.get('content')
+            content = validated_data.get('content'),
+            img = validated_data.get('img')
         )
         
         return s_obj
@@ -30,6 +32,7 @@ class TopicSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.section_id = validated_data.get('section_id', instance.section_id)
         instance.content = validated_data.get('content', instance.content)
+        instance.img = validated_data.get('img', instance.img)
         instance.updated_at = time.time()
         instance.save()
         
@@ -106,6 +109,7 @@ class TrainingSerializer(serializers.ModelSerializer):
             'is_open',
             'is_publish',
             'img',
+            'attend',
             'created_at',
             'deleted_at',
             'updated_at',
@@ -119,6 +123,7 @@ class TrainingSerializer(serializers.ModelSerializer):
             desc = validated_data.get('desc'),
             type_train = validated_data.get('type_train'),
             type_train_ac = validated_data.get('type_train_ac'),
+            attend = validated_data.get('attend'),
             img = validated_data.get('img'),
             location = validated_data.get('location', None),
             link = validated_data.get('link', None),
@@ -135,6 +140,7 @@ class TrainingSerializer(serializers.ModelSerializer):
         instance.img = validated_data.get('img', instance.img)
         instance.location = validated_data.get('location', instance.location)
         instance.link = validated_data.get('link', instance.link)
+        instance.attend = validated_data.get('attend', instance.attend)
         instance.dateline = validated_data.get('dateline', instance.dateline)
         instance.is_publish = validated_data.get('is_publish', instance.is_publish)
         instance.updated_at = time.time()

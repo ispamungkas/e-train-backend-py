@@ -5,8 +5,6 @@ from .models import PostTest, Answer
 from apps.users.models import User
 
 class AnswerSerializer(serializers.ModelSerializer):     
-    # post_id = serializers.PrimaryKeyRelatedField(queryset=PostTest.objects.all(), source='post', write_only=True)
-    # user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='user', write_only=True)  # ✅ Gunakan source='user'
 
     class Meta:
         model = Answer

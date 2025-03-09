@@ -11,6 +11,10 @@ def file_location(instance, filename, **kwargs):
     file_path = f'images/training/{time.time()}-{filename}'
     return file_path
 
+def file_location_content(instance, filename, **kwargs):
+    file_path = f'images/content/{instance.name}--{time.time()}-{filename}'
+    return file_path
+
 # Create your models here.
 class Training(BaseModel, SoftDelete):
     class TypeTrain(models.TextChoices):
@@ -25,6 +29,7 @@ class Training(BaseModel, SoftDelete):
     desc = models.TextField()
     type_train = models.CharField(max_length=10, choices=TypeTrain.choices, default=TypeTrain.TRAINING)
     type_train_ac = models.CharField(max_length=10, choices=TypeTrainAc.choices, default=TypeTrainAc.ONLINE)
+    attend = models.IntegerField()
     img = models.ImageField(max_length=None, upload_to=file_location)
     location = models.TextField(null=True)
     link = models.URLField(max_length=200, null=True)
@@ -49,6 +54,7 @@ class Topic(BaseModel, SoftDelete):
     
     section_id = models.ForeignKey(Section, related_name='topics', on_delete=models.CASCADE)
     name = models.CharField(max_length=15)
+    img = models.ImageField(upload_to=file_location_content, max_length=None, null=True)
     content = models.TextField(null=True)
     
     def __str__(self):

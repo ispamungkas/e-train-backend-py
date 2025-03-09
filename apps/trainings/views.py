@@ -18,9 +18,9 @@ class TrainingAPIView(APIView):
         param = request.GET.get('id')
         
         if param:
-            t_obj = Training.objects.get(id=param)
-        
-            if not t_obj:
+            try:
+                t_obj = Training.objects.get(id=param)
+            except Training.DoesNotExist:
                 return Response({'message': 'training not found'}, status=status.HTTP_404_NOT_FOUND)
 
             t_serialize = TrainingSerializer(t_obj)
@@ -72,11 +72,11 @@ class SectionAPIView(APIView):
         param = request.GET.get('id')
         
         if param:
-            s_obj = Section.objects.get(id=param)
-        
-            if not s_obj:
+            try:
+                s_obj = Section.objects.get(id=param)
+            except Section.DoesNotExist:
                 return Response({'message': 'section not found'}, status=status.HTTP_404_NOT_FOUND)
-            
+        
             t_serialize = SectionSerializer(s_obj)
             return Response({'message': 'data fetched', 'data': t_serialize.data})
          
@@ -125,9 +125,9 @@ class TopicAPIView(APIView):
         param = request.GET.get('id')
         
         if param:
-            t_obj = Topic.objects.get(id=param)
-        
-            if not t_obj:
+            try:
+                t_obj = Topic.objects.get(id=param)
+            except Topic.DoesNotExist:                   
                 return Response({'message': 'topic not found'}, status=status.HTTP_404_NOT_FOUND)
             
             t_serialize = TopicSerializer(t_obj)

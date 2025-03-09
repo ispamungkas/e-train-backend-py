@@ -11,7 +11,7 @@ def file_location_karya_nyata(instance, filename, **kwargs):
     return file_path
 
 def file_location_certificate(instance, filename, **kwargs):
-    file_path = f'file/karya_nyata/{time.time()}-{filename}'
+    file_path = f'file/certificate/{time.time()}-{filename}'
     return file_path
 
 class Enroll(BaseModel, SoftDelete):
@@ -22,13 +22,10 @@ class Enroll(BaseModel, SoftDelete):
         TIMEOUT = 'time out', 'TIME OUT'
         COMPLETED = 'completed', 'COMPLETED'
     
-    train_id = models.ForeignKey(Training, related_name='enrolls', on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, related_name='enrolls', on_delete=models.CASCADE)
+    train = models.ForeignKey(Training, related_name='enrolls', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='enrolls', on_delete=models.CASCADE)
     status = models.CharField(choices=Enroll_Status.choices, default=Enroll_Status.NEEDACTION, max_length=20)
-    out_date = models.IntegerField()
     p_learn = models.PositiveIntegerField(default=0)
-    S_learn = models.PositiveIntegerField(default=0)
-    
-    def __init__(self, *args, **kwargs):
-        return self.name
+    s_learn = models.PositiveIntegerField(default=0)
+ 
     
