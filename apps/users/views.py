@@ -74,8 +74,18 @@ class LoginUserAPIView(APIView):
         })
         
     def get(self, request):
+        param = request.GET.get('id')
+        luser = User.objects.all().order_by('-id')
         
-        luser = User.objects.all()
+        if param:
+            try:
+                luser_byid = luser.filter(id=param).first()
+            except User.DoesNotExist:
+                return Response({'message': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+            luser_serialize = UserSerializer(luser_byid)
+            return Response({'message': 'user successfully fetched', 'data' : luser_serialize.data})
+        
         luser_serialize = UserSerializer(
             luser, many=True
         )

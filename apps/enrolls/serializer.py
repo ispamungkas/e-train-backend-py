@@ -36,10 +36,23 @@ class EnrollSerializer(serializers.ModelSerializer):
 
             if int(time.time()) < int(obj.train.dateline):
                 obj.status = Enroll.Enroll_Status.TIMEOUT
+                obj.save()
+                return Enroll.Enroll_Status.TIMEOUT
             
             return Enroll.Enroll_Status.PROGRESS
 
         return Enroll.Enroll_Status.NEEDACTION
+    
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+
+        super().__init__(*args, **kwargs)
+
+        if fields is not None:
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
     
     class Meta:
         model = Enroll

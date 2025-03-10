@@ -25,7 +25,7 @@ class EnrollAPIView(APIView):
             e_serializer = EnrollSerializer(e_obj)
             return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
         
-        e_obj = Enroll.objects.all()
+        e_obj = Enroll.objects.all().order_by('-id')
         e_serializer = EnrollSerializer(e_obj, many=True)
         return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
         

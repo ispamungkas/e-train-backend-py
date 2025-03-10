@@ -3,6 +3,8 @@ import time
 from rest_framework import serializers
 from .models import User
 
+from apps.enrolls.serializer import EnrollSerializer
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 
@@ -11,6 +13,7 @@ d_user = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     
     ishead = serializers.BooleanField(required=False, write_only=True, default=False)
+    enrolls = EnrollSerializer(many=True, read_only=True, fields=['id', 'train', 'status', 'attandence', 'out_date'])
 
     class Meta:
         model = User

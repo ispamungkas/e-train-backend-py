@@ -15,7 +15,7 @@ class KaryaNyataAPIView(APIView):
     def get(self, request):
         param = request.GET.get('id')
         
-        k_obj = KaryaNyata.objects.all()
+        k_obj = KaryaNyata.objects.all().order_by('-id')
         if param:
             try:
                 k_obj_byid = k_obj.filter(id=id).first()
@@ -28,8 +28,6 @@ class KaryaNyataAPIView(APIView):
         
         k_serialize = KaryaNyataSerializer(k_obj, many=True)
         return Response({'message': 'karya nyata sucessfully fetched', 'data': k_serialize.data})
-            
-            
 
     def post(self, request):
         k_serialize = KaryaNyataSerializer(data=request.data)

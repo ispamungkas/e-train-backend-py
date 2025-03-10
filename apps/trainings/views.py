@@ -26,7 +26,7 @@ class TrainingAPIView(APIView):
             t_serialize = TrainingSerializer(t_obj)
             return Response({'message': 'data fetched', 'data': t_serialize.data})
          
-        t_obj = Training.objects.all()
+        t_obj = Training.objects.all().order_by('-id')
         t_serialize = TrainingSerializer(t_obj, many=True)
         return Response({'message': 'data fetched', 'data': t_serialize.data})
     
