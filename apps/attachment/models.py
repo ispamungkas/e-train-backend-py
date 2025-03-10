@@ -23,16 +23,13 @@ class KaryaNyata(BaseModel, SoftDelete):
         ACCEPTED = 'accepted', 'ACCEPTED'
     
     att = models.FileField(upload_to=file_location_karya_nyata)
-    enroll_id = models.ForeignKey(Enroll, related_name='karyanyata', on_delete=models.CASCADE)
+    enroll = models.ForeignKey(Enroll, related_name='karyanyata', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='karyanyata', on_delete=models.CASCADE)
     status = models.CharField(choices=KaryaNyataStatus.choices, default=KaryaNyataStatus.PENDING, max_length=15)
     
-    def __init__(self, *args, **kwargs):
-        return 'Karya Nyata'
     
 class Certificate(BaseModel, SoftDelete):
-    user_id = models.ForeignKey(User, related_name='certificate', on_delete=models.CASCADE)
-    enroll_id = models.ForeignKey(Enroll, related_name='certificate', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='certificate', on_delete=models.CASCADE)
+    enroll = models.ForeignKey(Enroll, related_name='certificate', on_delete=models.CASCADE)
     cert = models.FileField(upload_to=file_location_certificate)
     
-    def __init__(self, *args, **kwargs):
-        return 'Certificate'

@@ -23,6 +23,7 @@ from apps.users import views as user_view
 from apps.trainings import views as training_view
 from apps.test_training import views as test_training_view
 from apps.enrolls import views as enrolls_view
+from apps.attachment import views as attachment_view
 
 urlpatterns = [
     
@@ -56,7 +57,11 @@ urlpatterns = [
     
     ## Enroll
     path('enroll/', enrolls_view.EnrollAPIView.as_view(), name = 'Enroll Management'),
-    path('enroll/<int:id>', enrolls_view.EnrollAPIView.as_view(), name = 'Enroll Management')
+    path('enroll/<int:id>', enrolls_view.EnrollAPIView.as_view(), name = 'Enroll Management'),
+    
+    ## Enroll
+    path('karyanyata/', attachment_view.KaryaNyataAPIView.as_view(), name = 'Karya Nyata Management'),
+    path('karyanyata/<int:id>', attachment_view.KaryaNyataAPIView.as_view(), name = 'Karya Nyata Management'),
     
 ]
 

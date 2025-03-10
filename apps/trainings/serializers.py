@@ -86,6 +86,17 @@ class TrainingSerializer(serializers.ModelSerializer):
     total_jp = serializers.SerializerMethodField()
     is_open = serializers.SerializerMethodField()
     
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+
+        super().__init__(*args, **kwargs)
+
+        if fields is not None:
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+    
     def get_total_jp(self, obj):
         return sum(sc.jp for sc in obj.sections.all())
     

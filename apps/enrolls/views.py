@@ -23,11 +23,11 @@ class EnrollAPIView(APIView):
                 return Response({'message': 'enroll not found'}, status=status.HTTP_404_NOT_FOUND)
                 
             e_serializer = EnrollSerializer(e_obj)
-            return Response({'message': e_serializer.data})
+            return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
         
         e_obj = Enroll.objects.all()
         e_serializer = EnrollSerializer(e_obj, many=True)
-        return Response({'message': e_serializer.data})
+        return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
         
     def post(self, request):
         e_serializer = EnrollSerializer(data=request.data)

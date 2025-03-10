@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import Enroll
 
 from apps.trainings.models import Training
+from apps.trainings.serializers import TrainingSerializer
 from apps.users.models import User
 
 from apps.attachment.serializers import CertificateSerializer, KaryaNyataSerializer
@@ -11,11 +12,14 @@ from apps.attachment.serializers import CertificateSerializer, KaryaNyataSeriali
 class EnrollSerializer(serializers.ModelSerializer):
     train = serializers.PrimaryKeyRelatedField(queryset=Training.objects.all())
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    
     certificate = CertificateSerializer(read_only=True, many=True)
     karyanyata = KaryaNyataSerializer(read_only=True, many=True)
     status = serializers.SerializerMethodField()
     out_date = serializers.SerializerMethodField()  
+    training_detail = serializers.SerializerMethodField()
+    
+    def get_training_detail(self, obj):
+        return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac']).data
     
     def get_out_date(self, obj):
         if obj.train:
@@ -47,8 +51,10 @@ class EnrollSerializer(serializers.ModelSerializer):
             'out_date',
             'p_learn',
             's_learn',
+            'attandence',
             'certificate',
             'karyanyata',
+            'training_detail',
         ]
         
     def create(self, validated_data):
@@ -62,6 +68,7 @@ class EnrollSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.p_learn = validated_data.get('p_learn', instance.p_learn)
         instance.s_learn = validated_data.get('s_learn', instance.s_learn)
+        instance.attandence = validated_data.get('attandence', instance.attendance) 
         instance.save()
         
         return instance

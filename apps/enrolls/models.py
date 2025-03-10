@@ -27,5 +27,6 @@ class Enroll(BaseModel, SoftDelete):
     status = models.CharField(choices=Enroll_Status.choices, default=Enroll_Status.NEEDACTION, max_length=20)
     p_learn = models.PositiveIntegerField(default=0)
     s_learn = models.PositiveIntegerField(default=0)
+    attandence = models.BooleanField(default=False)
  
     
