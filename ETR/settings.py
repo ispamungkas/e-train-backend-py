@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'apps.test_training',
     'apps.enrolls',
     'apps.attachment',
+    'apps.utils'
 ]
 
 MIDDLEWARE = [

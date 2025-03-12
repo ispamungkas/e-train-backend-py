@@ -18,7 +18,7 @@ class EnrollAPIView(APIView):
         
         if param:
             try:
-                e_obj = Enroll.objets.get(id=param)
+                e_obj = Enroll.objects.get(id=param)
             except Enroll.DoesNotExist:
                 return Response({'message': 'enroll not found'}, status=status.HTTP_404_NOT_FOUND)
                 

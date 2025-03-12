@@ -63,6 +63,10 @@ urlpatterns = [
     path('karyanyata/', attachment_view.KaryaNyataAPIView.as_view(), name = 'Karya Nyata Management'),
     path('karyanyata/<int:id>', attachment_view.KaryaNyataAPIView.as_view(), name = 'Karya Nyata Management'),
     
+    ## Certificate
+    path('certificate/', attachment_view.CertificateAPIView.as_view(), name= "Certificate Management"),
+    path('certificate/verification', attachment_view.QRVerificationAPIView.as_view(), name="Certificate Verification")
+    
 ]
 
 if settings.DEBUG:

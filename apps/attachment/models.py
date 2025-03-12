@@ -31,5 +31,7 @@ class KaryaNyata(BaseModel, SoftDelete):
 class Certificate(BaseModel, SoftDelete):
     user = models.ForeignKey(User, related_name='certificate', on_delete=models.CASCADE)
     enroll = models.ForeignKey(Enroll, related_name='certificate', on_delete=models.CASCADE)
-    cert = models.FileField(upload_to=file_location_certificate)
+    cert = models.FileField()
     
+class QRVerification(BaseModel, SoftDelete):
+    code = models.CharField(max_length=100)

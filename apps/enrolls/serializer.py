@@ -19,7 +19,7 @@ class EnrollSerializer(serializers.ModelSerializer):
     training_detail = serializers.SerializerMethodField()
     
     def get_training_detail(self, obj):
-        return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac']).data
+        return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac', 'sections', 'attend']).data
     
     def get_out_date(self, obj):
         if obj.train:

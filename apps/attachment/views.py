@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 
-from .serializers import KaryaNyataSerializer, CertificateSerializer, KaryaNyata, User
+from .serializers import KaryaNyataSerializer, CertificateSerializer, KaryaNyata, QRVerification
 
 class KaryaNyataAPIView(APIView):
     parser_classes = [JSONParser, MultiPartParser,  FormParser]
@@ -55,4 +55,20 @@ class KaryaNyataAPIView(APIView):
 
 class CertificateAPIView(APIView):
     def post(self, request):
-        pass
+        c_serialize = CertificateSerializer(data = request.data)
+        if c_serialize.is_valid():
+            c_serialize.save()
+            return Response({'message': 'certificate sucessfully created', 'data': c_serialize.data}, status=status.HTTP_201_CREATED)
+        
+        e_message = list(c_serialize.errors.values())[0][0]
+        return Response({'message': e_message}, status=status.HTTP_400_BAD_REQUEST)
+
+class QRVerificationAPIView(APIView):
+    def post(self, request):
+        data = request.data.get('check')
+        q_valid = QRVerification.objects.filter(code=data).first()
+        
+        if not q_valid:
+            return Response({'message': 'certificate not verified'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        return Response({'message': 'certificate verified'})
