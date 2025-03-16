@@ -13,7 +13,7 @@ d_user = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     
     ishead = serializers.BooleanField(required=False, write_only=True, default=False)
-    enrolls = EnrollSerializer(many=True, read_only=True, fields=['id', 'train', 'status', 'attandence', 'out_date'])
+    enrolls = EnrollSerializer(many=True, read_only=True, fields=['id', 'train', 'status', 'attandence', 'out_date', 't_jp'])
 
     class Meta:
         model = User

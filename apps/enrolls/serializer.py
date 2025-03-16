@@ -15,7 +15,8 @@ class EnrollSerializer(serializers.ModelSerializer):
     certificate = CertificateSerializer(read_only=True, many=True)
     karyanyata = KaryaNyataSerializer(read_only=True, many=True)
     status = serializers.SerializerMethodField()
-    out_date = serializers.SerializerMethodField()  
+    out_date = serializers.SerializerMethodField()
+    t_jp = serializers.SerializerMethodField()  
     training_detail = serializers.SerializerMethodField()
     
     def get_training_detail(self, obj):
@@ -25,6 +26,9 @@ class EnrollSerializer(serializers.ModelSerializer):
         if obj.train:
             return obj.train.dateline
         return 0
+
+    def get_t_jp(self, obj):
+        return sum(sc.jp for sc in obj.train.sections.all())
     
     def get_status(self, obj):
         if obj.p_learn == 999:
@@ -67,6 +71,7 @@ class EnrollSerializer(serializers.ModelSerializer):
             'attandence',
             'certificate',
             'karyanyata',
+            't_jp',
             'training_detail',
         ]
         

@@ -16,6 +16,8 @@ from pathlib import Path
 from datetime import timedelta
 from decouple import config
 
+from firebase_admin import initialize_app
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,21 +47,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     
-    ## Import apps
-    # 'apps.attachment',
-    # 'apps.commons',
-    # 'apps.enrolls',
-    # 'apps.test',
-    # 'apps.trainings',
-    # 'apps.users',
-    
     'apps.commons',
     'apps.trainings',
     'apps.users',
     'apps.test_training',
     'apps.enrolls',
     'apps.attachment',
-    'apps.utils'
+    'apps.utils',
+    'fcm_django'
 ]
 
 MIDDLEWARE = [
@@ -84,30 +79,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(weeks=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
 
 ROOT_URLCONF = 'ETR.urls'
 
@@ -194,3 +171,25 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# # Optional ONLY IF you have initialized a firebase app already:
+# # Visit https://firebase.google.com/docs/admin/setup/#python
+# # for more options for the following:
+# # Store an environment variable called GOOGLE_APPLICATION_CREDENTIALS
+# # which is a path that point to a json file with your credentials.
+# # Additional arguments are available: credentials, options, name
+# FIREBASE_APP = initialize_app()
+# # To learn more, visit the docs here:
+# # https://cloud.google.com/docs/authentication/getting-started>
+
+# FCM_DJANGO_SETTINGS = {
+#      # default: _('FCM Django')
+#     "APP_VERBOSE_NAME": "[string for AppConfig's verbose_name]",
+#      # true if you want to have only one active device per registered user at a time
+#      # default: False
+#     "ONE_DEVICE_PER_USER": False,
+#      # devices to which notifications cannot be sent,
+#      # are deleted upon receiving error response from FCM
+#      # default: False
+#     "DELETE_INACTIVE_DEVICES": False,
+# }

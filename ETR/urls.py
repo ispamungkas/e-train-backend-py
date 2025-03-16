@@ -24,6 +24,8 @@ from apps.trainings import views as training_view
 from apps.test_training import views as test_training_view
 from apps.enrolls import views as enrolls_view
 from apps.attachment import views as attachment_view
+from django.urls import path
+from .views import publish_training
 
 urlpatterns = [
     
@@ -65,8 +67,10 @@ urlpatterns = [
     
     ## Certificate
     path('certificate/', attachment_view.CertificateAPIView.as_view(), name= "Certificate Management"),
-    path('certificate/verification', attachment_view.QRVerificationAPIView.as_view(), name="Certificate Verification")
+    path('certificate/verification', attachment_view.QRVerificationAPIView.as_view(), name="Certificate Verification"),
     
+   
+    path('send-notification-to-all/<int:id>', publish_training, name='publish training'),
 ]
 
 if settings.DEBUG:
