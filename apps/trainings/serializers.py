@@ -4,11 +4,13 @@ from rest_framework import serializers
 
 from .models import Training, Section, Topic, Status
 from apps.test_training.serializers import PostTestSerializer
+from apps.enrolls.models import Enroll
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = (
+            'id',
             'section_id',
             'name',
             'content',
@@ -101,9 +103,12 @@ class TrainingSerializer(serializers.ModelSerializer):
         return sum(sc.jp for sc in obj.sections.all())
     
     def get_is_open(self, obj):
-        if round(time.time()) >= obj.dateline:
-            return False
-        return True
+        if time.time() >= obj.dateline:
+            return True
+        return False
+    
+    def get_enrolls(self, obj):
+        return Enroll.objects.filter(id=obj.id)
     
     class Meta:
         model = Training
@@ -126,6 +131,7 @@ class TrainingSerializer(serializers.ModelSerializer):
             'updated_at',
             'sections',
             'post_tests',
+            'enrolls'
         )
     
     def create(self, validated_data):

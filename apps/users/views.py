@@ -30,7 +30,7 @@ def is_valid_nip(c_nip):
     return True
 
 class LoginUserAPIView(APIView):
-    parser_classes = [FormParser, MultiPartParser]
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
     
     def post(self, request):
         nip = request.data.get('nip')

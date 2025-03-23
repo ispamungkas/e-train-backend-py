@@ -19,6 +19,17 @@ class EnrollSerializer(serializers.ModelSerializer):
     t_jp = serializers.SerializerMethodField()  
     training_detail = serializers.SerializerMethodField()
     
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+
+        super().__init__(*args, **kwargs)
+
+        if fields is not None:
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+    
     def get_training_detail(self, obj):
         return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac', 'sections', 'attend']).data
     
@@ -38,7 +49,7 @@ class EnrollSerializer(serializers.ModelSerializer):
         
         if 0 < obj.p_learn < 999:
 
-            if int(time.time()) < int(obj.train.dateline):
+            if time.time() > obj.train.dateline:
                 obj.status = Enroll.Enroll_Status.TIMEOUT
                 obj.save()
                 return Enroll.Enroll_Status.TIMEOUT

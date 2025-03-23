@@ -9,7 +9,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = [
-            'post', 'user', 'ans'
+            'id', 'post', 'user', 'ans'
         ]
 
     def create(self, validated_data):

@@ -16,10 +16,20 @@ class TrainingAPIView(APIView):
     
     def get(self, request):
         param = request.GET.get('id')
+        param2 = request.GET.get('publish')
         
         if param:
             try:
                 t_obj = Training.objects.get(id=param)
+            except Training.DoesNotExist:
+                return Response({'message': 'training not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            t_serialize = TrainingSerializer(t_obj)
+            return Response({'message': 'data fetched', 'data': t_serialize.data})
+         
+        if param2:
+            try:
+                t_obj = Training.objects.filter(is_publish=True)
             except Training.DoesNotExist:
                 return Response({'message': 'training not found'}, status=status.HTTP_404_NOT_FOUND)
 
