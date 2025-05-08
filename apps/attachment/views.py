@@ -18,7 +18,7 @@ class KaryaNyataAPIView(APIView):
         k_obj = KaryaNyata.objects.all().order_by('-id')
         if param:
             try:
-                k_obj_byid = k_obj.filter(id=id).first()
+                k_obj_byid = k_obj.filter(id=param).first()
             except KaryaNyata.DoesNotExist:
                 return Response({'message': 'karya nyata not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -37,7 +37,7 @@ class KaryaNyataAPIView(APIView):
             return Response({'message': 'karya nyata successfully sended'}, status=status.HTTP_201_CREATED)
     
         e_message = list(k_serialize.errors.values())[0][0]
-        return Response({'message': e_message}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': k_serialize.error_messages}, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request, id):
         try:

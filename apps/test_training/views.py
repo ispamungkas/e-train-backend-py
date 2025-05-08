@@ -51,7 +51,7 @@ class PostTestAPIView(APIView):
             return Response({'message': 'post test successfully updated', 'data': t_serializer.data}, status=status.HTTP_200_OK)
 
         e_message = list(t_serializer.errors.values())[0][0]
-        return Response({'message': e_message}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': t_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class AnswerAPIView(APIView):
     parser_classes = [FormParser, JSONParser]

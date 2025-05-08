@@ -33,7 +33,7 @@ class TrainingAPIView(APIView):
             except Training.DoesNotExist:
                 return Response({'message': 'training not found'}, status=status.HTTP_404_NOT_FOUND)
 
-            t_serialize = TrainingSerializer(t_obj)
+            t_serialize = TrainingSerializer(t_obj, many=True)
             return Response({'message': 'data fetched', 'data': t_serialize.data})
          
         t_obj = Training.objects.all().order_by('-id')

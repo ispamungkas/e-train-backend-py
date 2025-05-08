@@ -15,6 +15,7 @@ class EnrollAPIView(APIView):
    
     def get(self, request):
         param = request.GET.get('id')
+        param2 = request.GET.get('user')
         
         if param:
             try:
@@ -24,6 +25,16 @@ class EnrollAPIView(APIView):
                 
             e_serializer = EnrollSerializer(e_obj)
             return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
+        
+        if param2:
+            try:
+                e_obj = Enroll.objects.filter(user=param2)
+            except Enroll.DoesNotExist:
+                return Response({'message': 'enroll not found'}, status=status.HTTP_404_NOT_FOUND)
+                
+            e_serializer = EnrollSerializer(e_obj, many = True)
+            return Response({'message': 'enroll succesfully fetched', 'data' : e_serializer.data})
+        
         
         e_obj = Enroll.objects.all().order_by('-id')
         e_serializer = EnrollSerializer(e_obj, many=True)
@@ -47,7 +58,7 @@ class EnrollAPIView(APIView):
         e_serializer = EnrollSerializer(e_obj, data=request.data, partial=True)
         if e_serializer.is_valid():
             e_serializer.save()
-            return Response(['message', 'enroll successfully updated'])
+            return Response({'message': 'enroll successfully updated', 'data' : e_serializer.data})
 
         e_message = list(e_serializer.errors.values())[0][0]
         return Response({'message': e_message}, status=status.HTTP_400_BAD_REQUEST)

@@ -22,14 +22,15 @@ class KaryaNyataSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         k_obj = KaryaNyata.objects.create(
             att = validated_data.get('att'),
-            enroll = validated_data.get('enroll')
+            enroll = validated_data.get('enroll'), 
+            user = validated_data.get('user')
         )
         
         return k_obj
     
     def update(self, instance, validated_data):
         instance.status = validated_data.get('status', KaryaNyata.KaryaNyataStatus.PENDING)
-        instance.ett = validated_data.get('att', instance.att)
+        instance.att = validated_data.get('att', instance.att)
         instance.update_at = time.time()
         instance.save()
         return instance

@@ -37,17 +37,16 @@ class LoginUserAPIView(APIView):
         password = request.data.get('password')
         
         ## if the super user has logged
-        if nip == 'superuser' and password == 'superuser':
-            u_obj = User.objects.get(nip=nip)
+        # if nip == '0000' and password == '0000':
+        #     u_obj = User.objects.get(nip=nip)
             
-            ## Checking token for SuperUser
-            u_token = authenticate(username=u_obj.nip, password=u_obj.password)
-            if u_token:
-                refresh = RefreshToken.for_user(u_token)
-                u_serialize = UserSerializer(u_obj)
-                return Response({'token': str(refresh.access_token), 'message': 'sucessfully login', 'user': u_serialize.data})
+        #     u_token = authenticate(username=u_obj.nip, password=u_obj.password)
+        #     if u_token:
+        #         refresh = RefreshToken.for_user(u_token)
+        #         u_serialize = UserSerializer(u_obj)
+        #         return Response({'token': str(refresh.access_token), 'message': 'sucessfully login', 'user': u_serialize.data})
             
-            return Response({'message': 'invalid credential'}, status=status.HTTP_401_UNAUTHORIZED)
+        #     return Response({'message': 'invalid credential'}, status=status.HTTP_401_UNAUTHORIZED)
         
         if not nip or not password:
             return Response({'message': 'please input require data'}, status=status.HTTP_400_BAD_REQUEST,)
@@ -57,7 +56,6 @@ class LoginUserAPIView(APIView):
         except User.DoesNotExist:
             return Response({'message': 'nip not found'}, status=status.HTTP_404_NOT_FOUND)
            
-        ## Checking password
         if not check_password(password=password, encoded=u_obj.password):
             return Response({'message': 'password doesnt match'}, status=status.HTTP_406_NOT_ACCEPTABLE)
          
@@ -70,7 +68,7 @@ class LoginUserAPIView(APIView):
         return Response({
             'token': str(refresh.access_token),
             'message': 'successfully login',
-            'user': u_serialize.data
+            'data': u_serialize.data
         })
         
     def get(self, request):
@@ -101,6 +99,7 @@ class UserAPIView(APIView):
     parser_classes = [FormParser, JSONParser, MultiPartParser]
     
     def post(self, request):
+        
         if not request.data.get('nip') or not request.data.get('name'):
             return Response({'message': 'please input require data'}, status=status.HTTP_400_BAD_REQUEST,)
 
@@ -132,7 +131,7 @@ class UpdateUserAPIVIew(APIView):
             })
         
         erorrs = list(u_serialize.errors.values())[0][0]
-        return Response({'message': erorrs}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': u_serialize.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class OTPAPIView(APIView):
     parser_classes = [FormParser, JSONParser]

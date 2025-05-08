@@ -16,7 +16,7 @@ class EnrollSerializer(serializers.ModelSerializer):
     karyanyata = KaryaNyataSerializer(read_only=True, many=True)
     status = serializers.SerializerMethodField()
     out_date = serializers.SerializerMethodField()
-    t_jp = serializers.SerializerMethodField()  
+    t_jp = serializers.SerializerMethodField()
     training_detail = serializers.SerializerMethodField()
     
     def __init__(self, *args, **kwargs):
@@ -30,8 +30,11 @@ class EnrollSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
     
+    def get_type_train(self, obj):
+        return obj.train.type_train
+    
     def get_training_detail(self, obj):
-        return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac', 'sections', 'attend']).data
+        return TrainingSerializer(obj.train, fields=['name', 'desc', 'total_jp', 'dateline', 'location', 'type_train', 'type_train_ac', 'sections', 'attend', 'img']).data
     
     def get_out_date(self, obj):
         if obj.train:
@@ -83,6 +86,8 @@ class EnrollSerializer(serializers.ModelSerializer):
             'certificate',
             'karyanyata',
             't_jp',
+            't_post',
+            't_karya_nyata',
             'training_detail',
         ]
         
@@ -97,7 +102,9 @@ class EnrollSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.p_learn = validated_data.get('p_learn', instance.p_learn)
         instance.s_learn = validated_data.get('s_learn', instance.s_learn)
-        instance.attandence = validated_data.get('attandence', instance.attendance) 
+        instance.t_post = validated_data.get('t_post', instance.t_post)
+        instance.t_karya_nyata = validated_data.get('t_karya_nyata', instance.t_karya_nyata)
+        instance.attandence = validated_data.get('attandence', instance.attandence) 
         instance.save()
         
         return instance

@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+import pytz
 
 from rest_framework import serializers
 
@@ -103,9 +105,25 @@ class TrainingSerializer(serializers.ModelSerializer):
         return sum(sc.jp for sc in obj.sections.all())
     
     def get_is_open(self, obj):
-        if time.time() >= obj.dateline:
-            return True
-        return False
+        if obj.dateline is None:
+            return False  
+    
+        if obj.dateline > 1000000000000:
+            obj.dateline = obj.dateline / 1000
+
+        try:
+            dateline_time = datetime.fromtimestamp(obj.dateline, pytz.utc)
+        except OSError as e:
+            print(f"Error: {e}")
+            return False  # Atau sesuai penanganan error kamu
+
+        # Ambil waktu sekarang dalam UTC
+        current_time_utc = datetime.now(pytz.utc)
+
+        # Bandingkan waktu sekarang dengan dateline
+        if current_time_utc >= dateline_time:
+            return False
+        return True
     
     def get_enrolls(self, obj):
         return Enroll.objects.filter(id=obj.id)

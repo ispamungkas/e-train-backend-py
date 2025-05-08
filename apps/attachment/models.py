@@ -11,7 +11,7 @@ def file_location_karya_nyata(instance, filename, **kwargs):
     return file_path
 
 def file_location_certificate(instance, filename, **kwargs):
-    file_path = f'file/karya_nyata/{time.time()}-{filename}'
+    file_path = f'file/certificate/{time.time()}-{filename}'
     return file_path
 
 # Create your models here.

@@ -13,7 +13,7 @@ d_user = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     
     ishead = serializers.BooleanField(required=False, write_only=True, default=False)
-    enrolls = EnrollSerializer(many=True, read_only=True, fields=['id', 'train', 'status', 'attandence', 'out_date', 't_jp'])
+    enrolls = EnrollSerializer(many=True, read_only=True, fields=['id', 'train', 'status', 'attandence', 'out_date', 't_jp', 'type_train'])
 
     class Meta:
         model = User
@@ -27,6 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
             'gender',
             'l_edu',
             'c_school',
+            'dob',
             'role',
             'ishead',
             'img_profile',
@@ -71,6 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.nip = validated_data.get('nip', instance.nip)
         instance.email = validated_data.get('email', instance.email)
         instance.address = validated_data.get('address', instance.address)
+        instance.dob = validated_data.get('dob', instance.dob)
         instance.p_number = validated_data.get('p_number', instance.p_number)
         instance.gender = validated_data.get('gender', instance.gender)
         instance.l_edu = validated_data.get('l_edu', instance.l_edu)

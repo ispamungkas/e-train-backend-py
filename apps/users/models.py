@@ -16,7 +16,7 @@ class User(models.Model):
         HEADSCHOOL = 'Head School'
         SUPERUSER = 'Super User'
     
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30 )
     nip = models.CharField(max_length=20, unique=True)  
     password = models.CharField(max_length=10)
     email = models.EmailField(null= True, unique=True)
@@ -25,6 +25,7 @@ class User(models.Model):
     gender = models.CharField(max_length=1, null=True)
     l_edu = models.CharField(max_length=20, null=True)
     c_school = models.CharField(max_length=20, null=True)
+    dob = models.IntegerField(default = 0)
     role = models.CharField(max_length=20, choices=RoleChoice.choices, null=True)
     img_profile = models.ImageField(null= True, max_length=None, upload_to=file_location)
     created_at = models.IntegerField(default=time.time)
