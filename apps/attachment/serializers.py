@@ -57,7 +57,8 @@ class CertificateSerializer(serializers.ModelSerializer):
             list_section_name.append(data)
         
         timezone = pytz.timezone("Asia/Jakarta")
-        dt = datetime.fromtimestamp(enroll.train.attend, tz=timezone)
+        timestamp_sec = enroll.train.dateline / 1000
+        dt = datetime.fromtimestamp(timestamp_sec, tz=timezone)
 
         romawi = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
         month = romawi[dt.month - 1] 

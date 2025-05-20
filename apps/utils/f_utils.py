@@ -30,6 +30,8 @@ def draw_centered_text(draw, text, font, center_x, center_y, fill="black"):
     :param center_y: Koordinat Y tengah
     :param fill: Warna teks
     """
+    if not text:
+        return  # Hindari error jika text = None atau kosong
     text_width, text_height = draw.textbbox((0, 0), text, font=font)[2:]  # Ambil ukuran teks
     text_x = center_x - (text_width // 2)  # Hitung posisi X agar center
     text_y = center_y - (text_height // 2)  # Hitung posisi Y agar center
